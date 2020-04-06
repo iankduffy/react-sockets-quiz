@@ -9,6 +9,8 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
+const { questions } = require('./getQuestion');
+
 
 app.use(cors());
 
@@ -33,9 +35,8 @@ io.on('connect', (socket) => {
   });
 
   socket.on('getQuestion', () => {
-    // const user = removeUser(socket.id);
-
-    
+    console.log({questions})
+    socket.emit('getQuestion', questions);    
   })
 
   socket.on('disconnect', () => {
