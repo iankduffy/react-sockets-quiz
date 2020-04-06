@@ -4,14 +4,13 @@ const socketio = require('socket.io');
 const cors = require('cors');
 const router = express.Router();
 
-
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-app.use(cors());
-// app.use(router);
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send({ response: "Server is up and running." }).status(200);
@@ -33,13 +32,11 @@ io.on('connect', (socket) => {
     callback();
   });
 
-  socket.on('sendMessage', (message, callback) => {
-    const user = getUser(socket.id);
+  socket.on('getQuestion', () => {
+    // const user = removeUser(socket.id);
 
-    io.to(user.room).emit('message', { user: user.name, text: message });
-
-    callback();
-  });
+    
+  })
 
   socket.on('disconnect', () => {
     const user = removeUser(socket.id);
@@ -50,5 +47,8 @@ io.on('connect', (socket) => {
     }
   })
 });
+
+app.use(express.static("../dist"));
+app.use(express.static("../dist"));
 
 server.listen(process.env.PORT || 5000, () => console.log(`Server has started.`));
