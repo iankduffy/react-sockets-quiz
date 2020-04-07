@@ -3,20 +3,20 @@ const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
 const router = express.Router();
+const path = require('path')
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
-const { questions } = require('./getQuestion');
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./server/users');
+const { questions } = require('./server/getQuestion');
 
 
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send({ response: "Server is up and running." }).status(200);
-});
+app.use(express.static("./client/dist"));
+
 
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
@@ -49,7 +49,11 @@ io.on('connect', (socket) => {
   })
 });
 
-app.use(express.static("../dist"));
-app.use(express.static("../dist"));
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+});
+
+
+
 
 server.listen(process.env.PORT || 5000, () => console.log(`Server has started.`));
