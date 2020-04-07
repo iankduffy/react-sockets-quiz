@@ -10,7 +10,7 @@ const Quiz = ({ location }) => {
   const [users, setUsers] = useState([]);
   const [currentQuestion, setQuestion] = useState('')
 
-  const ENDPOINT = 'http://localhost:5000/'
+  const ENDPOINT = 'https://remote-quiz-server.herokuapp.com/'
 
   const { name, room } = queryString.parse(location.search);
   console.log(name, room)
